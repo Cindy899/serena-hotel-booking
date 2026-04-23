@@ -1,75 +1,70 @@
-// src/controllers/bookingController.js
-// Design Pattern: Controller layer (MVC Pattern)
+const Booking = require('../models/Booking');
+const Room = require('../models/Room');
 
-const Booking = require('../models/booking');
-
-// Create a new booking
 const createBooking = async (req, res) => {
   try {
-    const booking = new Booking(req.body);
-    await booking.save();
+    const { roomId, checkInDate, checkOutDate, numberOfGuests, specialRequests } = req.body;
+    const room = await Room.findById(roomId);
+    if (!room || !room.isAvailable) {
+      return res.status(400).json({ success: false, message: 'Room not available' });
+    }
+    const nights = Math.ceil((new Date(checkOutDate) - new Date(checkInDate)) / (1000 * 60 * 60 * 24));
+    const totalPrice = nights * room.pricePerNight;
+    const booking = await Booking.create({
+      guest: req.guest.id, room: roomId, checkInDate,
+      checkOutDate, numberOfGuests, totalPrice, specialRequests,
+    });
+    await Room.findByIdAndUpdate(roomId, { isAvailable: false });
     res.status(201).json({ success: true, data: booking });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
 };
 
-// Get all bookings
 const getAllBookings = async (req, res) => {
   try {
-    const bookings = await Booking.find();
+    const bookings = await Booking.find()
+      .populate('guest', 'name email')
+      .populate('room', 'roomNumber roomType');
+    res.status(200).json({ success: true, count: bookings.length, data: bookings });
+  } catch (error) {
+    res.status(500).json({ success: false, message: error.message });
+  }
+};
+
+const getMyBookings = async (req, res) => {
+  try {
+    const bookings = await Booking.find({ guest: req.guest.id })
+      .populate('room', 'roomNumber roomType pricePerNight');
     res.status(200).json({ success: true, data: bookings });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-// Get a single booking by ID
-const getBookingById = async (req, res) => {
+const updateBookingStatus = async (req, res) => {
   try {
-    const booking = await Booking.findById(req.params.id);
-    if (!booking) {
-      return res.status(404).json({ success: false, message: 'Booking not found' });
-    }
-    res.status(200).json({ success: true, data: booking });
-  } catch (error) {
-    res.status(500).json({ success: false, message: error.message });
-  }
-};
-
-// Update booking status
-const updateBooking = async (req, res) => {
-  try {
-    const booking = await Booking.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
-    if (!booking) {
-      return res.status(404).json({ success: false, message: 'Booking not found' });
-    }
+    const booking = await Booking.findByIdAndUpdate(
+      req.params.id, { status: req.body.status }, { new: true }
+    );
+    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
     res.status(200).json({ success: true, data: booking });
   } catch (error) {
     res.status(400).json({ success: false, message: error.message });
   }
 };
 
-// Delete a booking
-const deleteBooking = async (req, res) => {
+const cancelBooking = async (req, res) => {
   try {
-    const booking = await Booking.findByIdAndDelete(req.params.id);
-    if (!booking) {
-      return res.status(404).json({ success: false, message: 'Booking not found' });
-    }
-    res.status(200).json({ success: true, message: 'Booking deleted successfully' });
+    const booking = await Booking.findById(req.params.id);
+    if (!booking) return res.status(404).json({ success: false, message: 'Booking not found' });
+    booking.status = 'Cancelled';
+    await booking.save();
+    await Room.findByIdAndUpdate(booking.room, { isAvailable: true });
+    res.status(200).json({ success: true, message: 'Booking cancelled', data: booking });
   } catch (error) {
     res.status(500).json({ success: false, message: error.message });
   }
 };
 
-module.exports = {
-  createBooking,
-  getAllBookings,
-  getBookingById,
-  updateBooking,
-  deleteBooking,
-};
+module.exports = { createBooking, getAllBookings, getMyBookings, updateBookingStatus, cancelBooking };

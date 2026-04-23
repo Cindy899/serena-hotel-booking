@@ -1,24 +1,26 @@
-// src/app.js
-// Serena Hotel Kigali - Booking Management System
-// Author: [Your Name]
-// Best Practice: Use environment variables, modular routing
-
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const connectDB = require('./config/db');
 const bookingRoutes = require('./routes/bookingRoutes');
+const roomRoutes = require('./routes/roomRoutes');
+const guestRoutes = require('./routes/guestRoutes');
+const paymentRoutes = require('./routes/paymentRoutes');
+const errorHandler = require('./middleware/errorHandler');
+
+connectDB();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
 app.use(cors());
 app.use(express.json());
 
-// Routes
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/rooms', roomRoutes);
+app.use('/api/guests', guestRoutes);
+app.use('/api/payments', paymentRoutes);
 
-// Health check endpoint
 app.get('/', (req, res) => {
   res.json({
     message: 'Serena Hotel Kigali - Booking System API is running',
@@ -26,9 +28,10 @@ app.get('/', (req, res) => {
   });
 });
 
-// Start server
+app.use(errorHandler);
+
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log('Server running on port ' + PORT);
 });
 
 module.exports = app;
