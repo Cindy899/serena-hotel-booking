@@ -8,8 +8,6 @@ const guestRoutes = require('./routes/guestRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
 const errorHandler = require('./middleware/errorHandler');
 
-connectDB();
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -30,8 +28,12 @@ app.get('/', (req, res) => {
 
 app.use(errorHandler);
 
-app.listen(PORT, () => {
-  console.log('Server running on port ' + PORT);
-});
+// Only connect to DB and start server if NOT in test mode
+if (process.env.NODE_ENV !== 'test') {
+  connectDB();
+  app.listen(PORT, () => {
+    console.log('Server running on port ' + PORT);
+  });
+}
 
 module.exports = app;
