@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Serena Hotel Kigali</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Arial,sans-serif;background:#0A0A0A;color:#fff}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;background:#141414;border-bottom:1px solid #2a2a2a;position:sticky;top:0;z-index:100;flex-wrap:wrap;gap:10px}
+.logo{font-size:20px;font-weight:bold;color:#C9A84C;letter-spacing:2px}
+.logo span{color:#fff;font-weight:300}
+.nav-links{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.nav-btn{padding:8px 16px;border:1px solid #333;background:transparent;color:#fff;font-size:12px;cursor:pointer;transition:all .3s}
+.nav-btn:hover{background:#C9A84C;border-color:#C9A84C;color:#0A0A0A}
+.page{display:none}.page.active{display:block}
+.hero{padding:80px 32px;text-align:center;background:linear-gradient(135deg,#0A0A0A,#1a1208,#0A0A0A)}
+.hero-tag{font-size:11px;letter-spacing:4px;color:#C9A84C;text-transform:uppercase;margin-bottom:16px}
+.hero h1{font-size:52px;font-weight:300;margin-bottom:14px}
+.hero h1 em{font-style:italic;color:#C9A84C}
+.hero p{color:#888;font-size:14px;margin-bottom:36px}
+.hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn-gold{padding:13px 36px;background:#C9A84C;color:#0A0A0A;border:none;font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.btn-gold:hover{background:#E8D5A3}
+.btn-outline{padding:13px 36px;background:transparent;color:#fff;border:1px solid #444;font-size:12px;letter-spacing:2px;text-transform:uppercase;cursor:pointer}
+.btn-outline:hover{border-color:#C9A84C;color:#C9A84C}
+.stats{display:flex;justify-content:center;gap:50px;padding:26px 32px;background:#1E1E1E;flex-wrap:wrap}
+.stat{text-align:center}
+.stat-num{font-size:34px;font-weight:bold;color:#C9A84C}
+.stat-label{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#888;margin-top:4px}
+.section{padding:56px 32px;max-width:1100px;margin:0 auto}
+.sec-header{text-align:center;margin-bottom:44px}
+.sec-tag{font-size:11px;letter-spacing:4px;color:#C9A84C;text-transform:uppercase;margin-bottom:10px}
+.sec-title{font-size:38px;font-weight:300}
+.divider{width:60px;height:1px;background:#C9A84C;margin:14px auto}
+.rooms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:22px}
+.room-card{background:#141414;border:1px solid #2a2a2a;overflow:hidden;transition:all .3s}
+.room-card:hover{border-color:#C9A84C;transform:translateY(-3px)}
+.room-img{height:155px;display:flex;align-items:center;justify-content:center;position:relative}
+.standard{background:linear-gradient(135deg,#1a1a2e,#16213e)}
+.deluxe{background:linear-gradient(135deg,#1a1208,#2d2010)}
+.suite{background:linear-gradient(135deg,#0d1f0d,#1a3a1a)}
+.presidential{background:linear-gradient(135deg,#1f0d1f,#3a1a3a)}
+.badge{position:absolute;top:10px;right:10px;font-size:10px;font-weight:bold;padding:3px 9px;text-transform:uppercase}
+.b-avail{background:#4CAF50;color:#fff}
+.b-booked{background:#E74C3C;color:#fff}
+.room-info{padding:16px}
+.room-type{font-size:10px;letter-spacing:3px;color:#C9A84C;text-transform:uppercase;margin-bottom:5px}
+.room-name{font-size:18px;margin-bottom:7px}
+.room-feats{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.feat{font-size:11px;color:#888}
+.room-footer{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid #2a2a2a}
+.room-price{font-size:20px;color:#C9A84C}
+.room-price span{font-size:11px;color:#888}
+.btn-sm{padding:7px 16px;background:#C9A84C;color:#0A0A0A;border:none;font-size:11px;font-weight:bold;cursor:pointer}
+.btn-sm:disabled{background:#333;color:#666;cursor:not-allowed}
+.form-wrap{max-width:460px;margin:0 auto;background:#141414;border:1px solid #2a2a2a;padding:44px}
+.form-title{font-size:32px;font-weight:300;margin-bottom:6px}
+.form-sub{font-size:13px;color:#888;margin-bottom:28px}
+.fg{margin-bottom:16px}
+.fl{display:block;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#C9A84C;margin-bottom:7px}
+.fi{width:100%;padding:11px 15px;background:#1E1E1E;border:1px solid #333;color:#fff;font-size:13px;outline:none}
+.fi:focus{border-color:#C9A84C}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.form-btn{width:100%;padding:14px;background:#C9A84C;color:#0A0A0A;border:none;font-size:12px;font-weight:bold;letter-spacing:2px;text-transform:uppercase;cursor:pointer;margin-top:8px}
+.form-btn:hover{background:#E8D5A3}
+.form-switch{text-align:center;margin-top:18px;font-size:13px;color:#888}
+.form-switch a{color:#C9A84C;cursor:pointer}
+.alert{padding:11px 16px;margin-bottom:16px;font-size:13px;display:none;border-left:3px solid}
+.alert-s{background:rgba(76,175,80,.1);border-color:#4CAF50;color:#81C784}
+.alert-e{background:rgba(231,76,60,.1);border-color:#E74C3C;color:#EF9A9A}
+.alert.show{display:block}
+.bwrap{max-width:820px;margin:0 auto}
+.bcard{background:#141414;border:1px solid #2a2a2a;padding:20px;margin-bottom:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.binfo h3{font-size:18px;margin-bottom:5px}
+.bmeta{font-size:12px;color:#888;line-height:1.8}
+.sbadge{padding:4px 11px;font-size:10px;font-weight:bold;letter-spacing:1px;text-transform:uppercase}
+.s-confirmed{background:rgba(76,175,80,.15);color:#81C784}
+.s-cancelled{background:rgba(231,76,60,.15);color:#EF9A9A}
+.modal-ov{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.88);z-index:1000;align-items:center;justify-content:center}
+.modal-ov.show{display:flex}
+.modal{background:#141414;border:1px solid #333;padding:42px;width:90%;max-width:460px;position:relative}
+.mcl{position:absolute;top:16px;right:16px;background:none;border:none;color:#888;font-size:22px;cursor:pointer}
+.mcl:hover{color:#C9A84C}
+.pcalc{padding:12px;background:#1E1E1E;margin-bottom:14px;display:none}
+.ptotal{font-size:24px;color:#C9A84C;margin-top:4px}
+.utag{display:flex;align-items:center;gap:8px;padding:7px 12px;background:#1E1E1E;border:1px solid #333;font-size:12px;color:#888}
+.udot{width:7px;height:7px;background:#C9A84C;border-radius:50%}
+.empty{text-align:center;padding:70px 20px;color:#888}
+.empty-icon{font-size:44px;margin-bottom:14px;opacity:.3}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">SERENA <span>HOTEL KIGALI</span></div>
+  <div class="nav-links">
+    <button class="nav-btn" onclick="showPage('home')">Home</button>
+    <button class="nav-btn" onclick="showPage('rooms')">Rooms</button>
+    <button class="nav-btn" id="bBtn" style="display:none" onclick="showPage('bookings')">My Bookings</button>
+    <div id="authBtns" style="display:flex;gap:8px">
+      <button class="nav-btn" onclick="showPage('login')">Login</button>
+      <button class="nav-btn" onclick="showPage('register')">Register</button>
+    </div>
+    <div id="userInfo" style="display:none;align-items:center;gap:8px">
+      <div class="utag"><div class="udot"></div><span id="uName"></span></div>
+      <button class="nav-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="page-home" class="page active">
+  <div class="hero">
+    <p class="hero-tag">★ Kigali's Finest 5-Star Experience ★</p>
+    <h1>Welcome to<br><em>Serena Hotel</em></h1>
+    <p>Luxury accommodation in the heart of Kigali, Rwanda</p>
+    <div class="hero-btns">
+      <button class="btn-gold" onclick="showPage('rooms')">Explore Rooms</button>
+      <button class="btn-outline" onclick="showPage('register')">Create Account</button>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">4</div><div class="stat-label">Room Types</div></div>
+    <div class="stat"><div class="stat-num">5★</div><div class="stat-label">Rating</div></div>
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Service</div></div>
+    <div class="stat"><div class="stat-num">1994</div><div class="stat-label">Est. Since</div></div>
+  </div>
+  <div class="section">
+    <div class="sec-header">
+      <p class="sec-tag">Our Accommodation</p>
+      <h2 class="sec-title">Featured Rooms</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="rooms-grid" id="featuredRooms"></div>
+  </div>
+</div>
+
+<!-- ROOMS -->
+<div id="page-rooms" class="page">
+  <div class="section">
+    <div class="sec-header">
+      <p class="sec-tag">Available Accommodation</p>
+      <h2 class="sec-title">All Rooms</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="rooms-grid" id="allRooms"></div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div id="page-register" class="page">
+  <div class="section">
+    <div class="form-wrap">
+      <h2 class="form-title">Create Account</h2>
+      <p class="form-sub">Join Serena Hotel and enjoy exclusive benefits</p>
+      <div class="alert alert-e" id="regErr"></div>
+      <div class="alert alert-s" id="regOk"></div>
+      <div class="fg"><label class="fl">Full Name</label><input type="text" class="fi" id="regName" placeholder="Jean Pierre"></div>
+      <div class="form-row">
+        <div class="fg"><label class="fl">Email</label><input type="email" class="fi" id="regEmail" placeholder="jp@email.com"></div>
+        <div class="fg"><label class="fl">Phone</label><input type="text" class="fi" id="regPhone" placeholder="+250788000001"></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label class="fl">Nationality</label><input type="text" class="fi" id="regNat" placeholder="Rwandan"></div>
+        <div class="fg"><label class="fl">Password</label><input type="password" class="fi" id="regPass" placeholder="••••••••"></div>
+      </div>
+      <button class="form-btn" onclick="register()">Create Account</button>
+      <p class="form-switch">Already have an account? <a onclick="showPage('login')">Sign in</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="page-login" class="page">
+  <div class="section">
+    <div class="form-wrap">
+      <h2 class="form-title">Welcome Back</h2>
+      <p class="form-sub">Sign in to access your bookings</p>
+      <div class="alert alert-e" id="loginErr"></div>
+      <div class="alert alert-s" id="loginOk"></div>
+      <div class="fg"><label class="fl">Email</label><input type="email" class="fi" id="loginEmail" placeholder="jp@email.com"></div>
+      <div class="fg"><label class="fl">Password</label><input type="password" class="fi" id="loginPass" placeholder="••••••••"></div>
+      <button class="form-btn" onclick="login()">Sign In</button>
+      <p class="form-switch">New guest? <a onclick="showPage('register')">Create account</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- BOOKINGS -->
+<div id="page-bookings" class="page">
+  <div class="section">
+    <div class="sec-header">
+      <p class="sec-tag">Your Reservations</p>
+      <h2 class="sec-title">My Bookings</h2>
+      <div class="divider"></div>
+    </div>
+    <div class="bwrap" id="bookingsList"></div>
+  </div>
+</div>
+
+<!-- BOOKING MODAL -->
+<div class="modal-ov" id="bookModal">
+  <div class="modal">
+    <button class="mcl" onclick="closeModal()">×</button>
+    <h2 class="form-title" id="modalTitle">Book Room</h2>
+    <p class="form-sub" id="modalPrice"></p>
+    <div class="alert alert-e" id="bookErr"></div>
+    <div class="alert alert-s" id="bookOk"></div>
+    <div class="form-row">
+      <div class="fg"><label class="fl">Check-In</label><input type="date" class="fi" id="checkIn"></div>
+      <div class="fg"><label class="fl">Check-Out</label><input type="date" class="fi" id="checkOut"></div>
+    </div>
+    <div class="fg"><label class="fl">Number of Guests</label><input type="number" class="fi" id="numGuests" value="1" min="1" max="4"></div>
+    <div class="fg"><label class="fl">Special Requests</label><input type="text" class="fi" id="specReq" placeholder="Early check-in, quiet room..."></div>
+    <div class="pcalc" id="priceCalc">
+      <div style="font-size:10px;color:#888;letter-spacing:1px">ESTIMATED TOTAL</div>
+      <div class="ptotal" id="totalPrice"></div>
+    </div>
+    <button class="form-btn" onclick="confirmBooking()">Confirm Reservation</button>
+  </div>
+</div>
+
+<script>
+var S={token:null,user:null,rooms:[],bookings:[],sel:null,nid:1};
+var ROOMS=[
+  {_id:'r1',roomNumber:'101',roomType:'Standard',pricePerNight:80,capacity:2,isAvailable:true,amenities:['WiFi','TV','AC'],emoji:'🛏️',cls:'standard'},
+  {_id:'r2',roomNumber:'201',roomType:'Deluxe',pricePerNight:150,capacity:2,isAvailable:true,amenities:['WiFi','TV','Mini Bar'],emoji:'✨',cls:'deluxe'},
+  {_id:'r3',roomNumber:'301',roomType:'Suite',pricePerNight:280,capacity:3,isAvailable:true,amenities:['WiFi','Jacuzzi','City View'],emoji:'🏙️',cls:'suite'},
+  {_id:'r4',roomNumber:'401',roomType:'Presidential',pricePerNight:500,capacity:4,isAvailable:true,amenities:['Private Pool','Butler','WiFi'],emoji:'👑',cls:'presidential'}
+];
+S.rooms=JSON.parse(JSON.stringify(ROOMS));
+
+function showPage(n){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.getElementById('page-'+n).classList.add('active');
+  if(n==='rooms')renderRooms('allRooms');
+  if(n==='home')renderRooms('featuredRooms');
+  if(n==='bookings')renderBookings();
+  var t=new Date().toISOString().split('T')[0];
+  var tm=new Date(Date.now()+86400000).toISOString().split('T')[0];
+  if(document.getElementById('checkIn')){document.getElementById('checkIn').value=t;document.getElementById('checkOut').value=tm;}
+}
+
+function renderRooms(id){
+  var c=document.getElementById(id);
+  if(!c)return;
+  c.innerHTML=S.rooms.map(function(r){
+    return '<div class="room-card">'+
+      '<div class="room-img '+r.cls+'">'+
+        '<span style="font-size:50px">'+r.emoji+'</span>'+
+        '<div class="badge '+(r.isAvailable?'b-avail':'b-booked')+'">'+(r.isAvailable?'Available':'Booked')+'</div>'+
+      '</div>'+
+      '<div class="room-info">'+
+        '<p class="room-type">'+r.roomType+' Room</p>'+
+        '<h3 class="room-name">Room '+r.roomNumber+'</h3>'+
+        '<div class="room-feats">'+
+          '<span class="feat">👥 '+r.capacity+' Guests</span>'+
+          r.amenities.slice(0,3).map(function(a){return '<span class="feat">• '+a+'</span>';}).join('')+
+        '</div>'+
+        '<div class="room-footer">'+
+          '<div class="room-price">$'+r.pricePerNight+'<span>/night</span></div>'+
+          '<button class="btn-sm" onclick="openBooking(\''+r._id+'\')" '+(r.isAvailable?'':'disabled')+'>'+(r.isAvailable?'Book Now':'Unavailable')+'</button>'+
+        '</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function register(){
+  var name=document.getElementById('regName').value.trim();
+  var email=document.getElementById('regEmail').value.trim();
+  var phone=document.getElementById('regPhone').value.trim();
+  var pass=document.getElementById('regPass').value;
+  hideA('reg');
+  if(!name||!email||!phone||!pass){showA('regErr','Please fill in all required fields.');return;}
+  if(pass.length<6){showA('regErr','Password must be at least 6 characters.');return;}
+  S.token='demo_'+Date.now();S.user={name:name,email:email};
+  showA('regOk','Welcome, '+name+'! Account created successfully.');
+  setTimeout(function(){updateUI();showPage('rooms');},1500);
+}
+
+function login(){
+  var email=document.getElementById('loginEmail').value.trim();
+  var pass=document.getElementById('loginPass').value;
+  hideA('login');
+  if(!email||!pass){showA('loginErr','Please enter your email and password.');return;}
+  if(pass.length<4){showA('loginErr','Invalid credentials. Please try again.');return;}
+  S.token='demo_'+Date.now();S.user={name:email.split('@')[0],email:email};
+  showA('loginOk','Login successful! Redirecting...');
+  setTimeout(function(){updateUI();showPage('rooms');},1000);
+}
+
+function logout(){S.token=null;S.user=null;S.bookings=[];updateUI();showPage('home');}
+
+function updateUI(){
+  var ok=!!S.token;
+  document.getElementById('authBtns').style.display=ok?'none':'flex';
+  document.getElementById('userInfo').style.display=ok?'flex':'none';
+  document.getElementById('bBtn').style.display=ok?'block':'none';
+  if(ok&&S.user)document.getElementById('uName').textContent=S.user.name;
+}
+
+function openBooking(id){
+  if(!S.token){showPage('login');return;}
+  var r=S.rooms.find(function(x){return x._id===id;});
+  if(!r)return;
+  S.sel=r;
+  document.getElementById('modalTitle').textContent='Book '+r.roomType+' — Room '+r.roomNumber;
+  document.getElementById('modalPrice').textContent='$'+r.pricePerNight+' per night';
+  hideA('book');
+  document.getElementById('priceCalc').style.display='none';
+  document.getElementById('bookModal').classList.add('show');
+  document.getElementById('checkIn').addEventListener('change',calcP);
+  document.getElementById('checkOut').addEventListener('change',calcP);
+}
+
+function calcP(){
+  var ci=new Date(document.getElementById('checkIn').value);
+  var co=new Date(document.getElementById('checkOut').value);
+  if(ci&&co&&co>ci&&S.sel){
+    var n=Math.ceil((co-ci)/86400000);
+    document.getElementById('totalPrice').textContent='$'+(n*S.sel.pricePerNight)+' ('+n+' night'+(n>1?'s':'')+')';
+    document.getElementById('priceCalc').style.display='block';
+  }
+}
+
+function closeModal(){document.getElementById('bookModal').classList.remove('show');S.sel=null;}
+
+function confirmBooking(){
+  hideA('book');
+  var ci=document.getElementById('checkIn').value;
+  var co=document.getElementById('checkOut').value;
+  var ng=document.getElementById('numGuests').value;
+  var sr=document.getElementById('specReq').value;
+  if(!ci||!co){showA('bookErr','Please select check-in and check-out dates.');return;}
+  if(new Date(co)<=new Date(ci)){showA('bookErr','Check-out must be after check-in.');return;}
+  var nights=Math.ceil((new Date(co)-new Date(ci))/86400000);
+  var total=nights*S.sel.pricePerNight;
+  S.bookings.push({_id:'b'+S.nid++,room:S.sel,checkInDate:ci,checkOutDate:co,numberOfGuests:ng,specialRequests:sr,totalPrice:total,nights:nights,status:'Confirmed',createdAt:new Date().toLocaleDateString()});
+  var ri=S.rooms.findIndex(function(x){return x._id===S.sel._id;});
+  if(ri!==-1)S.rooms[ri].isAvailable=false;
+  showA('bookOk','Booking confirmed! Total: $'+total+' for '+nights+' night(s).');
+  setTimeout(function(){closeModal();showPage('bookings');},2000);
+}
+
+function renderBookings(){
+  var c=document.getElementById('bookingsList');
+  if(!S.bookings.length){
+    c.innerHTML='<div class="empty"><div class="empty-icon">🏨</div><p>No bookings yet. <a onclick="showPage(\'rooms\')" style="color:#C9A84C;cursor:pointer">Browse rooms</a> to make your first reservation.</p></div>';
+    return;
+  }
+  c.innerHTML=S.bookings.map(function(b){
+    return '<div class="bcard">'+
+      '<div class="binfo">'+
+        '<h3>'+b.room.roomType+' Room — #'+b.room.roomNumber+'</h3>'+
+        '<div class="bmeta">'+
+          '📅 '+b.checkInDate+' → '+b.checkOutDate+'<br>'+
+          '🌙 '+b.nights+' night(s) · 👥 '+b.numberOfGuests+' guest(s)'+
+          (b.specialRequests?'<br>💬 '+b.specialRequests:'')+
+        '</div>'+
+      '</div>'+
+      '<div style="text-align:right">'+
+        '<div class="sbadge s-'+b.status.toLowerCase()+'">'+b.status+'</div>'+
+        '<div style="font-size:24px;color:#C9A84C;margin-top:8px">$'+b.totalPrice+'</div>'+
+        (b.status!=='Cancelled'?'<button onclick="cancelB(\''+b._id+'\')" style="margin-top:8px;padding:6px 12px;background:transparent;border:1px solid #444;color:#888;font-size:11px;cursor:pointer">Cancel</button>':'')+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function cancelB(id){
+  var b=S.bookings.find(function(x){return x._id===id;});
+  if(!b)return;
+  b.status='Cancelled';
+  var ri=S.rooms.findIndex(function(x){return x._id===b.room._id;});
+  if(ri!==-1)S.rooms[ri].isAvailable=true;
+  renderBookings();
+}
+
+function showA(id,msg){var e=document.getElementById(id);if(e){e.textContent=msg;e.classList.add('show');}}
+function hideA(p){['Err','Ok'].forEach(function(s){var e=document.getElementById(p+s);if(e)e.classList.remove('show');});}
+
+showPage('home');
+</script>
+</body>
+</html>

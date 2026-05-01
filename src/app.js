@@ -13,6 +13,7 @@ const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static('public'));
 
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/rooms', roomRoutes);
@@ -28,7 +29,6 @@ app.get('/', (req, res) => {
 
 app.use(errorHandler);
 
-// Only connect to DB and start server if NOT in test mode
 if (process.env.NODE_ENV !== 'test') {
   connectDB();
   app.listen(PORT, () => {

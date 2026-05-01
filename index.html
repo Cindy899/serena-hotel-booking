@@ -1,13 +1,960 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>hotel-booking-serena</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.js"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Serena Hotel Kigali — Booking System</title>
+  <style>
+    :root {
+      --gold: #C9A84C;
+      --gold-light: #E8D5A3;
+      --dark: #0A0A0A;
+      --dark2: #141414;
+      --dark3: #1E1E1E;
+      --white: #FFFFFF;
+      --muted: #888;
+      --green: #4CAF50;
+      --red: #E74C3C
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: var(--dark);
+      color: var(--white);
+      min-height: 100vh
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 32px;
+      background: var(--dark2);
+      border-bottom: 1px solid #2a2a2a;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      flex-wrap: wrap;
+      gap: 10px
+    }
+
+    .logo {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--gold);
+      letter-spacing: 2px
+    }
+
+    .logo span {
+      color: var(--white);
+      font-weight: normal
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap
+    }
+
+    .nav-btn {
+      padding: 8px 16px;
+      border: 1px solid #333;
+      background: transparent;
+      color: var(--white);
+      font-size: 12px;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: all 0.3s
+    }
+
+    .nav-btn:hover,
+    .nav-btn.active {
+      background: var(--gold);
+      border-color: var(--gold);
+      color: var(--dark)
+    }
+
+    .page {
+      display: none
+    }
+
+    .page.active {
+      display: block
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #0A0A0A, #1a1208, #0A0A0A);
+      padding: 80px 32px;
+      text-align: center
+    }
+
+    .hero-tag {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 16px
+    }
+
+    .hero h1 {
+      font-size: 52px;
+      font-weight: 300;
+      line-height: 1.1;
+      margin-bottom: 14px
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold)
+    }
+
+    .hero p {
+      color: var(--muted);
+      font-size: 14px;
+      margin-bottom: 36px;
+      letter-spacing: 1px
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap
+    }
+
+    .btn-gold {
+      padding: 13px 36px;
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s
+    }
+
+    .btn-gold:hover {
+      background: var(--gold-light)
+    }
+
+    .btn-outline {
+      padding: 13px 36px;
+      background: transparent;
+      color: var(--white);
+      border: 1px solid #444;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s
+    }
+
+    .btn-outline:hover {
+      border-color: var(--gold);
+      color: var(--gold)
+    }
+
+    .stats-bar {
+      display: flex;
+      justify-content: center;
+      gap: 50px;
+      padding: 26px 32px;
+      background: var(--dark3);
+      border-top: 1px solid #2a2a2a;
+      border-bottom: 1px solid #2a2a2a;
+      flex-wrap: wrap
+    }
+
+    .stat {
+      text-align: center
+    }
+
+    .stat-num {
+      font-size: 34px;
+      font-weight: bold;
+      color: var(--gold)
+    }
+
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 4px
+    }
+
+    .section {
+      padding: 56px 32px;
+      max-width: 1100px;
+      margin: 0 auto
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 44px
+    }
+
+    .section-tag {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 10px
+    }
+
+    .section-title {
+      font-size: 38px;
+      font-weight: 300
+    }
+
+    .divider {
+      width: 60px;
+      height: 1px;
+      background: var(--gold);
+      margin: 14px auto
+    }
+
+    .rooms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 22px
+    }
+
+    .room-card {
+      background: var(--dark2);
+      border: 1px solid #2a2a2a;
+      overflow: hidden;
+      transition: all 0.3s;
+      cursor: pointer
+    }
+
+    .room-card:hover {
+      border-color: var(--gold);
+      transform: translateY(-3px);
+      box-shadow: 0 16px 36px rgba(201, 168, 76, 0.1)
+    }
+
+    .room-img {
+      height: 155px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative
+    }
+
+    .room-img.standard {
+      background: linear-gradient(135deg, #1a1a2e, #16213e)
+    }
+
+    .room-img.deluxe {
+      background: linear-gradient(135deg, #1a1208, #2d2010)
+    }
+
+    .room-img.suite {
+      background: linear-gradient(135deg, #0d1f0d, #1a3a1a)
+    }
+
+    .room-img.presidential {
+      background: linear-gradient(135deg, #1f0d1f, #3a1a3a)
+    }
+
+    .avail-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      padding: 3px 9px;
+      text-transform: uppercase
+    }
+
+    .badge-avail {
+      background: var(--green);
+      color: #fff
+    }
+
+    .badge-booked {
+      background: var(--red);
+      color: #fff
+    }
+
+    .room-info {
+      padding: 16px
+    }
+
+    .room-type {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 5px
+    }
+
+    .room-name {
+      font-size: 18px;
+      margin-bottom: 7px
+    }
+
+    .room-feats {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      flex-wrap: wrap
+    }
+
+    .feat {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .room-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 12px;
+      border-top: 1px solid #2a2a2a
+    }
+
+    .room-price {
+      font-size: 20px;
+      color: var(--gold)
+    }
+
+    .room-price span {
+      font-size: 11px;
+      color: var(--muted)
+    }
+
+    .btn-sm {
+      padding: 7px 16px;
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      font-size: 11px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: all 0.3s
+    }
+
+    .btn-sm:hover {
+      background: var(--gold-light)
+    }
+
+    .btn-sm:disabled {
+      background: #333;
+      color: #666;
+      cursor: not-allowed
+    }
+
+    .form-wrap {
+      max-width: 460px;
+      margin: 0 auto;
+      background: var(--dark2);
+      border: 1px solid #2a2a2a;
+      padding: 44px
+    }
+
+    .form-title {
+      font-size: 32px;
+      font-weight: 300;
+      margin-bottom: 6px
+    }
+
+    .form-sub {
+      font-size: 13px;
+      color: var(--muted);
+      margin-bottom: 28px
+    }
+
+    .form-group {
+      margin-bottom: 16px
+    }
+
+    .form-label {
+      display: block;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 7px
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 11px 15px;
+      background: var(--dark3);
+      border: 1px solid #333;
+      color: var(--white);
+      font-size: 13px;
+      transition: border-color 0.3s;
+      outline: none
+    }
+
+    .form-input:focus {
+      border-color: var(--gold)
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .form-btn {
+      width: 100%;
+      padding: 14px;
+      background: var(--gold);
+      color: var(--dark);
+      border: none;
+      font-size: 12px;
+      font-weight: bold;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      margin-top: 8px;
+      transition: all 0.3s
+    }
+
+    .form-btn:hover {
+      background: var(--gold-light)
+    }
+
+    .form-switch {
+      text-align: center;
+      margin-top: 18px;
+      font-size: 13px;
+      color: var(--muted)
+    }
+
+    .form-switch a {
+      color: var(--gold);
+      cursor: pointer
+    }
+
+    .alert {
+      padding: 11px 16px;
+      margin-bottom: 16px;
+      font-size: 13px;
+      display: none;
+      border-left: 3px solid
+    }
+
+    .alert-success {
+      background: rgba(76, 175, 80, 0.1);
+      border-color: var(--green);
+      color: #81C784
+    }
+
+    .alert-error {
+      background: rgba(231, 76, 60, 0.1);
+      border-color: var(--red);
+      color: #EF9A9A
+    }
+
+    .alert.show {
+      display: block
+    }
+
+    .bookings-wrap {
+      max-width: 820px;
+      margin: 0 auto
+    }
+
+    .booking-card {
+      background: var(--dark2);
+      border: 1px solid #2a2a2a;
+      padding: 20px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      transition: border-color 0.3s
+    }
+
+    .booking-card:hover {
+      border-color: #444
+    }
+
+    .booking-info h3 {
+      font-size: 18px;
+      margin-bottom: 5px
+    }
+
+    .booking-meta {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.8
+    }
+
+    .status-badge {
+      padding: 4px 11px;
+      font-size: 10px;
+      font-weight: bold;
+      letter-spacing: 1px;
+      text-transform: uppercase
+    }
+
+    .status-confirmed {
+      background: rgba(76, 175, 80, 0.15);
+      color: #81C784
+    }
+
+    .status-cancelled {
+      background: rgba(231, 76, 60, 0.15);
+      color: #EF9A9A
+    }
+
+    .status-pending {
+      background: rgba(255, 193, 7, 0.15);
+      color: #FFD54F
+    }
+
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.88);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center
+    }
+
+    .modal-overlay.show {
+      display: flex
+    }
+
+    .modal {
+      background: var(--dark2);
+      border: 1px solid #333;
+      padding: 42px;
+      width: 90%;
+      max-width: 460px;
+      position: relative
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 22px;
+      cursor: pointer
+    }
+
+    .modal-close:hover {
+      color: var(--gold)
+    }
+
+    .price-calc {
+      padding: 12px;
+      background: var(--dark3);
+      margin-bottom: 14px;
+      display: none
+    }
+
+    .price-total {
+      font-size: 24px;
+      color: var(--gold);
+      margin-top: 4px
+    }
+
+    .user-tag {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      background: var(--dark3);
+      border: 1px solid #333;
+      font-size: 12px;
+      color: var(--muted)
+    }
+
+    .user-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--gold);
+      border-radius: 50%
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 70px 20px;
+      color: var(--muted)
+    }
+
+    .empty-icon {
+      font-size: 44px;
+      margin-bottom: 14px;
+      opacity: 0.3
+    }
+
+    @media(max-width:600px) {
+      .hero h1 {
+        font-size: 34px
+      }
+
+      nav {
+        padding: 12px 18px
+      }
+
+      .section {
+        padding: 32px 18px
+      }
+
+      .form-wrap {
+        padding: 26px 18px
+      }
+
+      .form-row {
+        grid-template-columns: 1fr
+      }
+
+      .stats-bar {
+        gap: 22px
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <nav>
+    <div class="logo">SERENA <span>HOTEL KIGALI</span></div>
+    <div class="nav-links">
+      <button class="nav-btn active" onclick="showPage('home')">Home</button>
+      <button class="nav-btn" onclick="showPage('rooms')">Rooms</button>
+      <button class="nav-btn" id="bookingsBtn" style="display:none" onclick="showPage('bookings')">My Bookings</button>
+      <div id="authBtns" style="display:flex;gap:8px">
+        <button class="nav-btn" onclick="showPage('login')">Login</button>
+        <button class="nav-btn" onclick="showPage('register')">Register</button>
+      </div>
+      <div id="userInfo" style="display:none;align-items:center;gap:8px">
+        <div class="user-tag">
+          <div class="user-dot"></div><span id="userName"></span>
+        </div>
+        <button class="nav-btn" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div id="page-home" class="page active">
+    <div class="hero">
+      <p class="hero-tag">★ Kigali's Finest 5-Star Experience ★</p>
+      <h1>Welcome to<br><em>Serena Hotel</em></h1>
+      <p>Luxury accommodation in the heart of Kigali, Rwanda</p>
+      <div class="hero-btns">
+        <button class="btn-gold" onclick="showPage('rooms')">Explore Rooms</button>
+        <button class="btn-outline" onclick="showPage('register')">Create Account</button>
+      </div>
+    </div>
+    <div class="stats-bar">
+      <div class="stat">
+        <div class="stat-num">4</div>
+        <div class="stat-label">Room Types</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">5★</div>
+        <div class="stat-label">Rating</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">24/7</div>
+        <div class="stat-label">Service</div>
+      </div>
+      <div class="stat">
+        <div class="stat-num">1994</div>
+        <div class="stat-label">Est. Since</div>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-header">
+        <p class="section-tag">Our Accommodation</p>
+        <h2 class="section-title">Featured Rooms</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="rooms-grid" id="featuredRooms"></div>
+    </div>
+  </div>
+
+  <div id="page-rooms" class="page">
+    <div class="section">
+      <div class="section-header">
+        <p class="section-tag">Available Accommodation</p>
+        <h2 class="section-title">All Rooms</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="rooms-grid" id="allRooms"></div>
+    </div>
+  </div>
+
+  <div id="page-register" class="page">
+    <div class="section">
+      <div class="form-wrap">
+        <h2 class="form-title">Create Account</h2>
+        <p class="form-sub">Join Serena Hotel and enjoy exclusive benefits</p>
+        <div class="alert alert-error" id="registerError"></div>
+        <div class="alert alert-success" id="registerSuccess"></div>
+        <div class="form-group"><label class="form-label">Full Name</label><input type="text" class="form-input"
+            id="regName" placeholder="Jean Pierre Uwase"></div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Email</label><input type="email" class="form-input"
+              id="regEmail" placeholder="jp@email.com"></div>
+          <div class="form-group"><label class="form-label">Phone</label><input type="text" class="form-input"
+              id="regPhone" placeholder="+250788000001"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">Nationality</label><input type="text" class="form-input"
+              id="regNationality" placeholder="Rwandan"></div>
+          <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input"
+              id="regPassword" placeholder="••••••••"></div>
+        </div>
+        <button class="form-btn" onclick="register()">Create Account</button>
+        <p class="form-switch">Already have an account? <a onclick="showPage('login')">Sign in</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-login" class="page">
+    <div class="section">
+      <div class="form-wrap">
+        <h2 class="form-title">Welcome Back</h2>
+        <p class="form-sub">Sign in to access your bookings</p>
+        <div class="alert alert-error" id="loginError"></div>
+        <div class="alert alert-success" id="loginSuccess"></div>
+        <div class="form-group"><label class="form-label">Email Address</label><input type="email" class="form-input"
+            id="loginEmail" placeholder="jp@email.com"></div>
+        <div class="form-group"><label class="form-label">Password</label><input type="password" class="form-input"
+            id="loginPassword" placeholder="••••••••"></div>
+        <button class="form-btn" onclick="login()">Sign In</button>
+        <p class="form-switch">New guest? <a onclick="showPage('register')">Create account</a></p>
+      </div>
+    </div>
+  </div>
+
+  <div id="page-bookings" class="page">
+    <div class="section">
+      <div class="section-header">
+        <p class="section-tag">Your Reservations</p>
+        <h2 class="section-title">My Bookings</h2>
+        <div class="divider"></div>
+      </div>
+      <div class="bookings-wrap" id="bookingsList"></div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="bookingModal">
+    <div class="modal">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <h2 class="form-title" id="modalTitle">Book Room</h2>
+      <p class="form-sub" id="modalPrice"></p>
+      <div class="alert alert-error" id="bookingError"></div>
+      <div class="alert alert-success" id="bookingSuccess"></div>
+      <div class="form-row">
+        <div class="form-group"><label class="form-label">Check-In</label><input type="date" class="form-input"
+            id="checkIn"></div>
+        <div class="form-group"><label class="form-label">Check-Out</label><input type="date" class="form-input"
+            id="checkOut"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Number of Guests</label><input type="number" class="form-input"
+          id="numGuests" value="1" min="1" max="4"></div>
+      <div class="form-group"><label class="form-label">Special Requests</label><input type="text" class="form-input"
+          id="specialReq" placeholder="Early check-in, quiet room..."></div>
+      <div class="price-calc" id="priceCalc">
+        <div style="font-size:10px;color:var(--muted);letter-spacing:1px">ESTIMATED TOTAL</div>
+        <div class="price-total" id="totalPrice"></div>
+      </div>
+      <button class="form-btn" onclick="confirmBooking()">Confirm Reservation</button>
+    </div>
+  </div>
+
+  <script>
+    var state = { token: null, user: null, rooms: [], bookings: [], selectedRoom: null, nextId: 1 };
+    var sampleRooms = [
+      { _id: 'r1', roomNumber: '101', roomType: 'Standard', pricePerNight: 80, capacity: 2, isAvailable: true, amenities: ['WiFi', 'TV', 'AC'], emoji: '🛏️', imgClass: 'standard' },
+      { _id: 'r2', roomNumber: '201', roomType: 'Deluxe', pricePerNight: 150, capacity: 2, isAvailable: true, amenities: ['WiFi', 'TV', 'AC', 'Mini Bar'], emoji: '✨', imgClass: 'deluxe' },
+      { _id: 'r3', roomNumber: '301', roomType: 'Suite', pricePerNight: 280, capacity: 3, isAvailable: true, amenities: ['WiFi', 'TV', 'Jacuzzi', 'City View'], emoji: '🏙️', imgClass: 'suite' },
+      { _id: 'r4', roomNumber: '401', roomType: 'Presidential', pricePerNight: 500, capacity: 4, isAvailable: true, amenities: ['WiFi', 'TV', 'Private Pool', 'Butler'], emoji: '👑', imgClass: 'presidential' }
+    ];
+    state.rooms = JSON.parse(JSON.stringify(sampleRooms));
+
+    function showPage(n) {
+      document.querySelectorAll('.page').forEach(function (p) { p.classList.remove('active') });
+      document.getElementById('page-' + n).classList.add('active');
+      if (n === 'rooms') renderRooms('allRooms');
+      if (n === 'home') renderRooms('featuredRooms');
+      if (n === 'bookings') renderBookings();
+      var t = new Date().toISOString().split('T')[0];
+      var tm = new Date(Date.now() + 86400000).toISOString().split('T')[0];
+      if (document.getElementById('checkIn')) { document.getElementById('checkIn').value = t; document.getElementById('checkOut').value = tm; }
+    }
+
+    function renderRooms(id) {
+      var c = document.getElementById(id);
+      if (!c) return;
+      c.innerHTML = state.rooms.map(function (r) {
+        return '<div class="room-card">' +
+          '<div class="room-img ' + r.imgClass + '">' +
+          '<span style="font-size:50px">' + r.emoji + '</span>' +
+          '<div class="avail-badge ' + (r.isAvailable ? 'badge-avail' : 'badge-booked') + '">' + (r.isAvailable ? 'Available' : 'Booked') + '</div>' +
+          '</div>' +
+          '<div class="room-info">' +
+          '<p class="room-type">' + r.roomType + ' Room</p>' +
+          '<h3 class="room-name">Room ' + r.roomNumber + '</h3>' +
+          '<div class="room-feats">' +
+          '<span class="feat">👥 ' + r.capacity + ' Guests</span>' +
+          r.amenities.slice(0, 3).map(function (a) { return '<span class="feat">• ' + a + '</span>' }).join('') +
+          '</div>' +
+          '<div class="room-footer">' +
+          '<div class="room-price">$' + r.pricePerNight + '<span>/night</span></div>' +
+          '<button class="btn-sm" onclick="openBooking(\'' + r._id + '\')" ' + (r.isAvailable ? '' : 'disabled') + '>' + (r.isAvailable ? 'Book Now' : 'Unavailable') + '</button>' +
+          '</div>' +
+          '</div>' +
+          '</div>';
+      }).join('');
+    }
+
+    function register() {
+      var name = document.getElementById('regName').value.trim();
+      var email = document.getElementById('regEmail').value.trim();
+      var phone = document.getElementById('regPhone').value.trim();
+      var nat = document.getElementById('regNationality').value.trim();
+      var pass = document.getElementById('regPassword').value;
+      hideAlerts('register');
+      if (!name || !email || !phone || !pass) { showAlert('registerError', 'Please fill in all required fields.'); return; }
+      if (pass.length < 6) { showAlert('registerError', 'Password must be at least 6 characters.'); return; }
+      state.token = 'demo_' + Date.now();
+      state.user = { name: name, email: email };
+      showAlert('registerSuccess', 'Welcome, ' + name + '! Account created successfully.');
+      setTimeout(function () { updateAuthUI(); showPage('rooms'); }, 1500);
+    }
+
+    function login() {
+      var email = document.getElementById('loginEmail').value.trim();
+      var pass = document.getElementById('loginPassword').value;
+      hideAlerts('login');
+      if (!email || !pass) { showAlert('loginError', 'Please enter your email and password.'); return; }
+      if (pass.length < 4) { showAlert('loginError', 'Invalid credentials. Please try again.'); return; }
+      state.token = 'demo_' + Date.now();
+      state.user = { name: email.split('@')[0], email: email };
+      showAlert('loginSuccess', 'Login successful! Redirecting...');
+      setTimeout(function () { updateAuthUI(); showPage('rooms'); }, 1000);
+    }
+
+    function logout() {
+      state.token = null; state.user = null; state.bookings = [];
+      updateAuthUI(); showPage('home');
+    }
+
+    function updateAuthUI() {
+      var ok = !!state.token;
+      document.getElementById('authBtns').style.display = ok ? 'none' : 'flex';
+      document.getElementById('userInfo').style.display = ok ? 'flex' : 'none';
+      document.getElementById('bookingsBtn').style.display = ok ? 'block' : 'none';
+      if (ok && state.user) document.getElementById('userName').textContent = state.user.name;
+    }
+
+    function openBooking(roomId) {
+      if (!state.token) { showPage('login'); return; }
+      var room = state.rooms.find(function (r) { return r._id === roomId; });
+      if (!room) return;
+      state.selectedRoom = room;
+      document.getElementById('modalTitle').textContent = 'Book ' + room.roomType + ' — Room ' + room.roomNumber;
+      document.getElementById('modalPrice').textContent = '$' + room.pricePerNight + ' per night';
+      hideAlerts('booking');
+      document.getElementById('priceCalc').style.display = 'none';
+      document.getElementById('bookingModal').classList.add('show');
+      document.getElementById('checkIn').addEventListener('change', calcPrice);
+      document.getElementById('checkOut').addEventListener('change', calcPrice);
+    }
+
+    function calcPrice() {
+      var ci = new Date(document.getElementById('checkIn').value);
+      var co = new Date(document.getElementById('checkOut').value);
+      if (ci && co && co > ci && state.selectedRoom) {
+        var n = Math.ceil((co - ci) / 86400000);
+        document.getElementById('totalPrice').textContent = '$' + (n * state.selectedRoom.pricePerNight) + ' (' + n + ' night' + (n > 1 ? 's' : '') + ')';
+        document.getElementById('priceCalc').style.display = 'block';
+      }
+    }
+
+    function closeModal() { document.getElementById('bookingModal').classList.remove('show'); state.selectedRoom = null; }
+
+    function confirmBooking() {
+      hideAlerts('booking');
+      var ci = document.getElementById('checkIn').value;
+      var co = document.getElementById('checkOut').value;
+      var ng = document.getElementById('numGuests').value;
+      var sr = document.getElementById('specialReq').value;
+      if (!ci || !co) { showAlert('bookingError', 'Please select check-in and check-out dates.'); return; }
+      if (new Date(co) <= new Date(ci)) { showAlert('bookingError', 'Check-out must be after check-in.'); return; }
+      var nights = Math.ceil((new Date(co) - new Date(ci)) / 86400000);
+      var total = nights * state.selectedRoom.pricePerNight;
+      state.bookings.push({ _id: 'b' + state.nextId++, room: state.selectedRoom, checkInDate: ci, checkOutDate: co, numberOfGuests: ng, specialRequests: sr, totalPrice: total, nights: nights, status: 'Confirmed', createdAt: new Date().toLocaleDateString() });
+      var ri = state.rooms.findIndex(function (r) { return r._id === state.selectedRoom._id; });
+      if (ri !== -1) state.rooms[ri].isAvailable = false;
+      showAlert('bookingSuccess', '✓ Booking confirmed! Total: $' + total + ' for ' + nights + ' night(s).');
+      setTimeout(function () { closeModal(); showPage('bookings'); }, 2000);
+    }
+
+    function renderBookings() {
+      var c = document.getElementById('bookingsList');
+      if (!state.bookings.length) {
+        c.innerHTML = '<div class="empty-state"><div class="empty-icon">🏨</div><p>No bookings yet. <a onclick="showPage(\'rooms\')" style="color:var(--gold);cursor:pointer">Browse rooms</a> to make your first reservation.</p></div>';
+        return;
+      }
+      c.innerHTML = state.bookings.map(function (b) {
+        return '<div class="booking-card">' +
+          '<div class="booking-info">' +
+          '<h3>' + b.room.roomType + ' Room — #' + b.room.roomNumber + '</h3>' +
+          '<div class="booking-meta">' +
+          '📅 Check-in: ' + b.checkInDate + ' → Check-out: ' + b.checkOutDate + '<br>' +
+          '🌙 ' + b.nights + ' night(s) · 👥 ' + b.numberOfGuests + ' guest(s)<br>' +
+          (b.specialRequests ? '💬 ' + b.specialRequests + '<br>' : '') +
+          '📋 Booked: ' + b.createdAt +
+          '</div>' +
+          '</div>' +
+          '<div style="text-align:right">' +
+          '<div class="status-badge status-' + b.status.toLowerCase() + '">' + b.status + '</div>' +
+          '<div style="font-size:24px;color:var(--gold);margin-top:8px">$' + b.totalPrice + '</div>' +
+          (b.status !== 'Cancelled' ? '<button onclick="cancelBooking(\'' + b._id + '\')" style="margin-top:8px;padding:6px 12px;background:transparent;border:1px solid #444;color:var(--muted);font-size:11px;cursor:pointer;letter-spacing:1px;transition:all 0.3s" onmouseover="this.style.borderColor=\'#E74C3C\';this.style.color=\'#E74C3C\'" onmouseout="this.style.borderColor=\'#444\';this.style.color=\'var(--muted)\'">Cancel</button>' : '') +
+          '</div>' +
+          '</div>';
+      }).join('');
+    }
+
+    function cancelBooking(id) {
+      var b = state.bookings.find(function (x) { return x._id === id; });
+      if (!b) return;
+      b.status = 'Cancelled';
+      var ri = state.rooms.findIndex(function (r) { return r._id === b.room._id; });
+      if (ri !== -1) state.rooms[ri].isAvailable = true;
+      renderBookings();
+    }
+
+    function showAlert(id, msg) { var e = document.getElementById(id); e.textContent = msg; e.classList.add('show'); }
+    function hideAlerts(p) { ['Error', 'Success'].forEach(function (t) { var e = document.getElementById(p + t); if (e) e.classList.remove('show'); }); }
+
+    renderRooms('featuredRooms');
+  </script>
+</body>
+
 </html>
